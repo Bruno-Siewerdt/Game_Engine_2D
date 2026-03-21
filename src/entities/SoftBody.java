@@ -6,8 +6,8 @@ import game.Vector3;
 
 public class SoftBody extends Entity {
 
-	public SoftBody(Vector3 P) {
-		super(P);
+	public SoftBody(Vector3 position, Vector3 dimensions) {
+		super(position, dimensions);
 	}
 	
 	@Override

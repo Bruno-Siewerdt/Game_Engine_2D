@@ -41,13 +41,13 @@ public class Vector3 {
 		return z;
 	}
 	
-	public void sum(Vector3 v2) {
+	public void add(Vector3 v2) {
 		this.x += v2.x;
 		this.y += v2.y;
 		this.z += v2.z;
 	}
 	
-	public void sum(double value, Axis axis) {
+	public void add(double value, Axis axis) {
 		switch (axis) {
 		case X:
 			this.x += value;
@@ -105,7 +105,7 @@ public class Vector3 {
 	}
 	
 	public void addSpeed(Vector3 speed, double Ts) {
-		this.sum(new Vector3(speed.x*Ts, speed.y*Ts, speed.z*Ts));
+		this.add(new Vector3(speed.x*Ts, speed.y*Ts, speed.z*Ts));
 	}
 	
 	public static double distance(Vector3 v1, Vector3 v2) {

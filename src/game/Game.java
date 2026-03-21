@@ -17,6 +17,7 @@ import java.util.Random;
 import javax.swing.JFrame;
 
 import entities.*;
+import game.Vector3.Axis;
 import spritesheet.*;
 import world.*;
 
@@ -27,19 +28,21 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	private Thread thread;
 	public static JFrame frame;
 	
-	public static final int SCALE = 1;
+	public static final int SCALE = 1; // Pixel scale
 	public static final int HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height/SCALE;
 	public static final int WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width/SCALE;
 	
-	/*  Physics  */
-	public static final double GRAVITY = 980;
-	public static final double AIR_RESISTANCE = 100;
+	/*  defines scale of world in X and Y axis  */
+	public static final double WORLD_X_SCALE = 1.0;
+	public static final double WORLD_Y_SCALE = 1.0;
 	
 	private BufferedImage image;
 	public static Spritesheet spritesheet;
 	public static UI ui;
+	public static Camera camera;
 	
-	public List<Entity> entities;
+	public static Player player;
+	public static List<Entity> entities;
 	World world;
 	
 	public static void main(String[] args) {
@@ -55,9 +58,11 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		image = new BufferedImage(WIDTH/SCALE, HEIGHT/SCALE, BufferedImage.TYPE_INT_RGB);
 		//ui = new UI();
 		world = new World();
+		camera = new Camera();
 		
+		player = new Player(new Vector3(100, 100, 0), new Vector3(64, 128, 1));
 		entities = new ArrayList<Entity>();
-		entities.add(new RigidBody(new Vector3(WIDTH/4, HEIGHT/2, 0)));
+		entities.add(new RigidBody(new Vector3(WIDTH/4, HEIGHT/2, 0), new Vector3(80, 80, 1)));
 	}
 	
 	public void initFrame() {
@@ -94,6 +99,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		for (Entity entity : entities) {
 			entity.update(Ts);
 		}
+		player.update(Ts);
 		
 		// -----------------  Ends Here  -----------------
 	}
@@ -114,6 +120,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		for (Entity entity : entities) {
 			entity.render(g);
 		}
+		player.render(g);
 		
 		// -----------------  Ends Here  -----------------
 		
@@ -155,11 +162,35 @@ public class Game extends Canvas implements Runnable, KeyListener{
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		
+		char key = Character.toUpperCase(e.getKeyChar());
+		if (key == 'W' && player.S.getY() >= 0) {
+			player.S.add(-50, Axis.Y);
+		}
+		if (key == 'S' && player.S.getY() <= 0) {
+			player.S.add(50, Axis.Y);
+		}
+		if (key == 'D' && player.S.getX() <= 0) {
+			player.S.add(50, Axis.X);
+		}
+		if (key == 'A' && player.S.getX() >= 0) {
+			player.S.add(-50, Axis.X);
+		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		
+		char key = Character.toUpperCase(e.getKeyChar());
+		if (key == 'W' && player.S.getY() <= 0) {
+			player.S.add(50, Axis.Y);
+		}
+		if (key == 'S' && player.S.getY() >= 0) {
+			player.S.add(-50, Axis.Y);
+		}
+		if (key == 'D' && player.S.getX() >= 0) {
+			player.S.add(-50, Axis.X);
+		}
+		if (key == 'A' && player.S.getX() <= 0) {
+			player.S.add(50, Axis.X);
+		}
 	}
 }

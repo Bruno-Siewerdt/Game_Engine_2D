@@ -1,6 +1,5 @@
 package world;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -9,7 +8,9 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import game.Game;
 import game.Vector3;
+import world.Tile.TileType;
 
 public class World {
 	
@@ -26,52 +27,63 @@ public class World {
 	public static List<Tile> tiles;
 	
 	private BufferedImage worldMap;
-	
-	final Color PATH = new Color(120, 69, 2);
-	final Color GRASS = new Color(152, 252, 38);
-	final Color WATER = new Color(62, 198, 240);
-	final Color BRIDGE = new Color(61, 33, 2);
-	final Color TREE = new Color(66, 120, 4);
-	final Color BUSH = new Color(121, 219, 9);
+	public static BufferedImage spritesheet;
 	
 	public World() {
 		tiles = new ArrayList<Tile>();
 		
 		try {
 			worldMap = ImageIO.read(getClass().getResource("/example_world.png"));
+			spritesheet = ImageIO.read(getClass().getResource("/roguelikeSheet_transparent.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 		width = worldMap.getWidth()*TILE_SIZE;
 		height = worldMap.getHeight()*TILE_SIZE;
 		
-		for (int w = 0; w < width; w+=TILE_SIZE) {
-			for (int h = 0; h < height; h+=TILE_SIZE) {
-				int rgb = worldMap.getRGB(w/TILE_SIZE, h/TILE_SIZE) & 0xFF;
-				System.out.println(rgb);
-				Color color;
+		createTiles();
+	}
+	
+	void createTiles() {
+		
+		for (int y = 0; y < height; y+=TILE_SIZE) {
+			for (int x = 0; x < width; x+=TILE_SIZE) {
+				int rgb = worldMap.getRGB(x/TILE_SIZE, y/TILE_SIZE) & 0xFF;
+				
+				TileType type = TileType.GRASS;
+				TileType backType = null;
+				
 				switch(rgb) {
 				case 0:
-					color = PATH;
+					type = TileType.PATH;
+					backType = TileType.GRASS;
 					break;
 				case 51:
-					color = TREE;
+					//color = TREE; ADD TREE
+					backType = TileType.GRASS;
 					break;
 				case 102:
-					color = WATER;
+					type = TileType.WATER;
 					break;
 				case 153:
-					color = BUSH;
+					//color = BUSH; ADD BUSH
+					backType = TileType.GRASS;
 					break;
 				case 187:
-					color = BRIDGE;
+					type = TileType.BRIDGE;
+					backType = TileType.GRASS;
 					break;
-				default:
-					color = GRASS;
 				}
-				tiles.add(new Tile(new Vector3(w, h, 0), color));
+				
+				tiles.add(new Tile(new Vector3(x, y, 0), type, backType));
 			}
+		}
+		setTilesSprites();
+	}
+	
+	void setTilesSprites() { // program first configures all tiles, then finds the proper sprite for each case (e.g. meeting of water and land)
+		for (Tile tile: tiles) {
+			tile.getSprite();
 		}
 	}
 	
@@ -84,8 +96,19 @@ public class World {
 	}
 		
 	public void render(Graphics g) {
-		for (Tile tile : tiles) {
-			tile.render(g);
+		int initX = Game.camera.getX()/TILE_SIZE;
+		int endX = (Game.camera.getX() + Game.WIDTH)/TILE_SIZE;
+		int initY = Game.camera.getY()/TILE_SIZE;
+		int endY = (Game.camera.getY() + Game.HEIGHT)/TILE_SIZE;
+		
+		endY = endY == height/TILE_SIZE ? endY-1 : endY;
+		endX = endX == width/TILE_SIZE ? endX-1 : endX;
+		
+		for (int x = initX; x <= endX; x++) {
+			for (int y = initY; y <= endY; y++) {
+				Tile tile = tiles.get(x + y * (width/TILE_SIZE));
+				tile.render(g);
+			}
 		}
 	}
 	

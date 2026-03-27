@@ -17,6 +17,7 @@ import java.util.Random;
 import javax.swing.JFrame;
 
 import entities.*;
+import entities.Entity.Direction;
 import game.Vector3.Axis;
 import spritesheet.*;
 import world.*;
@@ -52,17 +53,17 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	
 	public Game() {
 		this.setPreferredSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize()));
-		//spritesheet = new Spritesheet("/Spritesheet.png");
 		initFrame();
 		addKeyListener(this);
 		image = new BufferedImage(WIDTH/SCALE, HEIGHT/SCALE, BufferedImage.TYPE_INT_RGB);
+		
+		entities = new ArrayList<Entity>();
+		spritesheet = new Spritesheet("/roguelikeSheet_transparent.png");
 		//ui = new UI();
 		world = new World();
 		camera = new Camera();
 		
-		player = new Player(new Vector3(100, 100, 0), new Vector3(64, 128, 1));
-		entities = new ArrayList<Entity>();
-		entities.add(new RigidBody(new Vector3(WIDTH/4, HEIGHT/2, 0), new Vector3(80, 80, 1)));
+		player = new Player(new Vector3(350, 50, 0), new Vector3(128, 128, 1), new CollisionMask(new Vector3(32, 28, 0), new Vector3(64, 100, 0)));
 	}
 	
 	public void initFrame() {
@@ -165,15 +166,19 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		char key = Character.toUpperCase(e.getKeyChar());
 		if (key == 'W' && player.S.getY() >= 0) {
 			player.S.add(-50, Axis.Y);
+			((Entity)player).setDirection(Direction.UP);
 		}
 		if (key == 'S' && player.S.getY() <= 0) {
 			player.S.add(50, Axis.Y);
+			((Entity)player).setDirection(Direction.DOWN);
 		}
 		if (key == 'D' && player.S.getX() <= 0) {
 			player.S.add(50, Axis.X);
+			((Entity)player).setDirection(Direction.RIGHT);
 		}
 		if (key == 'A' && player.S.getX() >= 0) {
 			player.S.add(-50, Axis.X);
+			((Entity)player).setDirection(Direction.LEFT);
 		}
 	}
 

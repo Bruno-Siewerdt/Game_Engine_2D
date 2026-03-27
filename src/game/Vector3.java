@@ -77,31 +77,31 @@ public class Vector3 {
 		return new Vector3(this.x*v2.x, this.y*v2.y, this.z*v2.z);
 	}
 	
-	public static double mod(Vector3 v) {
-		return Math.sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
+	public double mod() {
+		return Math.sqrt(x*x + y*y + z*z);
 	}
 	
-	public static double mod(Vector3 v, Axis axis) {
+	public double mod(Axis axis) {
 		switch (axis) {
 		case XY:
-			return Math.sqrt(v.x*v.x + v.y*v.y);
+			return Math.sqrt(x*x + y*y);
 		case YZ:
-			return Math.sqrt(v.z*v.z + v.y*v.y);
+			return Math.sqrt(z*z + y*y);
 		case XZ:
-			return Math.sqrt(v.x*v.x + v.z*v.z);
+			return Math.sqrt(x*x + z*z);
 		case X:
-			return Math.sqrt(v.x*v.x);
+			return Math.sqrt(x*x);
 		case Y:
-			return Math.sqrt(v.y*v.y);
+			return Math.sqrt(y*y);
 		case Z:
-			return Math.sqrt(v.z*v.z);
+			return Math.sqrt(z*z);
 		default:
-			return Math.sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
+			return Math.sqrt(x*x + y*y + z*z);
 		}
 	}
 	
-	public static double phase(Vector3 v) {
-		return Math.atan2(v.y, v.x);
+	public double phase() {
+		return Math.atan2(y, x);
 	}
 	
 	public void addSpeed(Vector3 speed, double Ts) {
@@ -113,7 +113,7 @@ public class Vector3 {
 	}
 	
 	public static Vector3 normalize(Vector3 vector) {
-		double length = mod(vector);
+		double length = vector.mod();
 	    if (length != 0.0) {
 	        float s = 1.0f / (float)length;
 	        vector.x = vector.x*s;
@@ -123,8 +123,8 @@ public class Vector3 {
 	    return vector;
 	}
 	
-	public static void print(Vector3 v) {
-		System.out.println("x: " + v.x + "     " + "y: " + v.y + "     " + "z: " + v.z);
+	public void print() {
+		System.out.println("x: " + x + "     " + "y: " + y + "     " + "z: " + z);
 	}
 	
 }

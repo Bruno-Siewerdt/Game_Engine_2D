@@ -5,11 +5,15 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 
+import entities.InvisibleBlock;
+import entities.Plant;
 import game.Game;
 import game.Vector3;
+import spritesheet.Spritesheet;
 import world.Tile.TileType;
 
 public class World {
@@ -27,14 +31,12 @@ public class World {
 	public static List<Tile> tiles;
 	
 	private BufferedImage worldMap;
-	public static BufferedImage spritesheet;
 	
 	public World() {
 		tiles = new ArrayList<Tile>();
 		
 		try {
 			worldMap = ImageIO.read(getClass().getResource("/example_world.png"));
-			spritesheet = ImageIO.read(getClass().getResource("/roguelikeSheet_transparent.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -45,7 +47,7 @@ public class World {
 	}
 	
 	void createTiles() {
-		
+		Random randomGenerator = new Random();
 		for (int y = 0; y < height; y+=TILE_SIZE) {
 			for (int x = 0; x < width; x+=TILE_SIZE) {
 				int rgb = worldMap.getRGB(x/TILE_SIZE, y/TILE_SIZE) & 0xFF;
@@ -59,15 +61,19 @@ public class World {
 					backType = TileType.GRASS;
 					break;
 				case 51:
-					//color = TREE; ADD TREE
-					backType = TileType.GRASS;
+					int i = randomGenerator.nextInt(6);
+					BufferedImage treeSprite = Game.spritesheet.getSprite(221 + (i*17), 171, 16, 32);
+					Game.entities.add(new Plant(new Vector3(x, y, 0), new Vector3(TILE_SIZE, 2*TILE_SIZE, 0), treeSprite));
+					type = TileType.GRASS;
 					break;
 				case 102:
 					type = TileType.WATER;
 					break;
 				case 153:
-					//color = BUSH; ADD BUSH
-					backType = TileType.GRASS;
+					int n = randomGenerator.nextInt(3);
+					BufferedImage bushSprite = Game.spritesheet.getSprite(323 + (n*17), 157, 16, 12);
+					Game.entities.add(new Plant(new Vector3(x, y+(TILE_SIZE/4), 0), new Vector3(TILE_SIZE, 3*TILE_SIZE/4, 0), bushSprite));
+					type = TileType.GRASS;
 					break;
 				case 187:
 					type = TileType.BRIDGE;

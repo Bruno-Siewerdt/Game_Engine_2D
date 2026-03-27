@@ -12,6 +12,10 @@ public class RigidBody extends Entity {
 		super(position, dimensions);
 	}
 	
+	public RigidBody(Vector3 position, Vector3 dimensions, CollisionMask mask) {
+		super(position, dimensions, mask);
+	}
+	
 	@Override
 	public void update(double Ts) {
 		S.addSpeed(A, Ts);

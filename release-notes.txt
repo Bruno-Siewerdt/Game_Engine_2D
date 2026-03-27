@@ -1,3 +1,9 @@
+V0.0.4 - 27/03/2026
+ - Added collision masks;
+ - Created some rigidbody components;
+ - Added walking animation for player;
+ - Changed default sprites;
+
 V0.0.3 - 11/03/2026
  - Created adaptive Tile System;
 

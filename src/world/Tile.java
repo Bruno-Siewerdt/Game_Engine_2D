@@ -8,6 +8,8 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
+import entities.InvisibleBlock;
+import entities.Plant;
 import game.Game;
 import game.Vector3;
 
@@ -119,6 +121,8 @@ public class Tile {
 			} else if (X < World.getWidth()/World.TILE_SIZE-1 && Y < World.getHeight()/World.TILE_SIZE-1 && World.tiles.get(getTileIndex(X+1, Y+1)).type == TileType.GRASS) {
 				spriteIndex = 9;
 			}
+		} else if (this.type == TileType.WATER) {
+			Game.entities.add(new InvisibleBlock(new Vector3(X*World.TILE_SIZE, Y*World.TILE_SIZE, 0), new Vector3(World.TILE_SIZE, World.TILE_SIZE, 0)));
 		}
 		return spriteIndex;
 	}
@@ -127,7 +131,7 @@ public class Tile {
 		if (type == TileType.GRASS) {
 			Random randomGenerator = new Random();
 			int i = randomGenerator.nextInt(10) < 5 ? 0 : 1; 
-			sprite = World.spritesheet.getSubimage(GRASS[i][0], GRASS[i][1], GRASS[i][2], GRASS[i][3]);
+			sprite = Game.spritesheet.getSprite(GRASS[i][0], GRASS[i][1], GRASS[i][2], GRASS[i][3]);
 		} else {
 			int X = this.P.getX()/World.TILE_SIZE;
 			int Y = this.P.getY()/World.TILE_SIZE;
@@ -139,11 +143,11 @@ public class Tile {
 			} else if (type == TileType.PATH || type == TileType.BRIDGE) {
 				spriteList = PATH;
 			}
-			sprite = World.spritesheet.getSubimage(spriteList[spriteIndex][0], spriteList[spriteIndex][1], spriteList[spriteIndex][2], spriteList[spriteIndex][3]);
+			sprite = Game.spritesheet.getSprite(spriteList[spriteIndex][0], spriteList[spriteIndex][1], spriteList[spriteIndex][2], spriteList[spriteIndex][3]);
 		}
 		
 		if (backTileType == TileType.GRASS) {
-			backSprite = World.spritesheet.getSubimage(GRASS[0][0], GRASS[0][1], GRASS[0][2], GRASS[0][3]);
+			backSprite = Game.spritesheet.getSprite(GRASS[0][0], GRASS[0][1], GRASS[0][2], GRASS[0][3]);
 		}
 	}
 	

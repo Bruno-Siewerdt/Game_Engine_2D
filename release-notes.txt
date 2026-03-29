@@ -1,3 +1,8 @@
+V0.0.5 - 29/03/2026
+ - Created UI Components;
+ - Code improvements;
+ - Improved Player movement mechanics;
+
 V0.0.4 - 27/03/2026
  - Added collision masks;
  - Created some rigidbody components;

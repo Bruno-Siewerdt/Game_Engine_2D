@@ -3,6 +3,7 @@ package entities;
 import java.awt.Graphics;
 
 import game.Vector3;
+import game.Vector3.Axis;
 
 public class Entity {
 	
@@ -20,16 +21,16 @@ public class Entity {
 	    }
 	}
 	
-	public Vector3 P, S, A; // position, speed, acceleration
-	public Vector3 dimensions;
+	protected Vector3 position, speed, acceleration;
+	protected Vector3 dimensions;
 	private boolean solid;
-	public Direction direction;
+	protected Direction direction;
 	CollisionMask collisionMask;
 	
 	public Entity(Vector3 position, Vector3 dimensions) {
-		this.P = position;
-		this.S = new Vector3(0,0,0);
-		this.A = new Vector3(0,0,0);
+		this.position = position;
+		this.speed = new Vector3(0,0,0);
+		this.acceleration = new Vector3(0,0,0);
 		this.dimensions = dimensions;
 		this.collisionMask = new CollisionMask(new Vector3(0,0,0), dimensions);
 		solid = true;
@@ -37,23 +38,25 @@ public class Entity {
 	}
 	
 	public Entity(Vector3 position, Vector3 dimensions, CollisionMask mask) {
-		this.P = position;
-		this.S = new Vector3(0,0,0);
-		this.A = new Vector3(0,0,0);
+		this.position = position;
+		this.speed = new Vector3(0,0,0);
+		this.acceleration = new Vector3(0,0,0);
 		this.dimensions = dimensions;
 		this.collisionMask = mask;
 		solid = true;
 		direction = Direction.RIGHT;
 	}
 	
+	// Position
+	
 	public final int getX() {
-		return P.getX();
+		return position.getX();
 	}
 	public final int getY() {
-		return P.getY();
+		return position.getY();
 	}
 	public final int getZ() {
-		return P.getZ();
+		return position.getZ();
 	}
 	
 	public final int getHeight() {
@@ -63,26 +66,62 @@ public class Entity {
 		return dimensions.getX();
 	}
 	
+	// Speed
+	
+	public final int getSpeedX() {
+		return speed.getX();
+	}
+	public final int getSpeedY() {
+		return speed.getY();
+	}
+	public final int getSpeedZ() {
+		return speed.getZ();
+	}
+	
+	public void addSpeed(Vector3 speed) {
+		this.speed.integrate(speed, 1);
+	}
+	
+	public void addSpeedX(double speed) {
+		this.speed.add(speed, Axis.X);
+	}
+	
+	public void addSpeedY(double speed) {
+		this.speed.add(speed, Axis.Y);
+	}
+	
+	public void addSpeedZ(double speed) {
+		this.speed.add(speed, Axis.Z);
+	}
+	
+	public void setSpeed(Vector3 speed) {
+		this.speed = speed;
+	}
+	
+	public Direction getDirection() {
+		return direction;
+	}
+	
 	// Collisions
 	
 	public final int getCollisionX() {
-		return P.getX()+collisionMask.getX();
+		return position.getX()+collisionMask.getX();
 	}
 	public final int getCollisionY() {
-		return P.getY()+collisionMask.getY();
+		return position.getY()+collisionMask.getY();
 	}
 	public final int getCollisionZ() {
-		return P.getZ()+collisionMask.getZ();
+		return position.getZ()+collisionMask.getZ();
 	}
 	
 	public final double getCollisionXD() {
-		return P.getXD()+collisionMask.getXD();
+		return position.getXD()+collisionMask.getXD();
 	}
 	public final double getCollisionYD() {
-		return P.getYD()+collisionMask.getYD();
+		return position.getYD()+collisionMask.getYD();
 	}
 	public final double getCollisionZD() {
-		return P.getZD()+collisionMask.getZD();
+		return position.getZD()+collisionMask.getZD();
 	}
 	
 	public final int getCollisionHeight() {

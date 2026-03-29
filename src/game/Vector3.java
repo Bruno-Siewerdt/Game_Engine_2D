@@ -104,7 +104,7 @@ public class Vector3 {
 		return Math.atan2(y, x);
 	}
 	
-	public void addSpeed(Vector3 speed, double Ts) {
+	public void integrate(Vector3 speed, double Ts) {
 		this.add(new Vector3(speed.x*Ts, speed.y*Ts, speed.z*Ts));
 	}
 	

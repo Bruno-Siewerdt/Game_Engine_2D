@@ -1,8 +1,6 @@
 package entities;
 
-import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
@@ -47,7 +45,7 @@ public class Player extends RigidBody {
 	}
 	
 	void setWalkingSprite() {
-		if (S.mod() > 0) { // if has speed
+		if (speed.mod() > 0) { // if has speed
 			if (!walking) {
 				spriteIndex = 1;
 				walking = true;
@@ -69,14 +67,14 @@ public class Player extends RigidBody {
 	
 	@Override
 	public void update(double Ts) {
-		S.addSpeed(A, Ts);
-		P.addSpeed(S.mult(PLAYER_SPEED), Ts);
+		speed.integrate(acceleration, Ts);
+		position.integrate(speed.mult(PLAYER_SPEED), Ts);
 		
 		resolveCollisions(Game.entities);
 		
 		setWalkingSprite();
 		
-		Game.camera.update(P, dimensions);
+		Game.camera.update(position, dimensions);
 	}
 	
 	public void resolveCollisions(List<Entity> entities) {
@@ -115,13 +113,13 @@ public class Player extends RigidBody {
         	
             // Filter 3 - Correction of Player position
             if (overlapX < overlapY) {
-                this.P.add((dx > 0) ? overlapX : -overlapX, Axis.X);
+                this.position.add((dx > 0) ? overlapX : -overlapX, Axis.X);
                 
                 // Recalculate
                 playerCenterX = this.getCollisionXD() + playerHalfWidth;
                 playerCenterY = this.getCollisionYD() + playerHalfHeight;
             } else {
-                this.P.add((dy > 0) ? overlapY : -overlapY, Axis.Y);
+                this.position.add((dy > 0) ? overlapY : -overlapY, Axis.Y);
                 
                 // Recalculate
                 playerCenterX = this.getCollisionXD() + playerHalfWidth;
@@ -135,7 +133,7 @@ public class Player extends RigidBody {
 		/*Graphics2D g2 = (Graphics2D)g;
 		g2.setColor(new Color(250, 40, 40, 100));
 		g2.fillRect(this.getCollisionX()-Game.camera.getX(), this.getCollisionY()-Game.camera.getY(), getCollisionWidth(), getCollisionHeight());*/
-		g.drawImage(sprites[direction.getDirection()][spriteIndex], P.getX()-Game.camera.getX(), P.getY()-Game.camera.getY(), getWidth(), getHeight(), null);
+		g.drawImage(sprites[direction.getDirection()][spriteIndex], getX()-Game.camera.getX(), getY()-Game.camera.getY(), getWidth(), getHeight(), null);
 
 	}
 

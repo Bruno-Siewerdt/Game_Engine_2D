@@ -13,8 +13,8 @@ public class SoftBody extends Entity {
 	@Override
 	public void update(double Ts) {
 		
-		S.addSpeed(A, Ts);
-		P.addSpeed(S, Ts);
+		speed.integrate(acceleration, Ts);
+		position.integrate(speed, Ts);
 		
 		
 	}

@@ -2,8 +2,10 @@ package entities;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 
+import entities.Clothing.ClothingType;
 import game.Game;
 import game.Vector3;
 import game.Vector3.Axis;
@@ -19,6 +21,8 @@ public class Player extends RigidBody {
 	private boolean walking;
 	private int spriteIndex = 0;
 	private int spriteChangeCount = 0;
+	
+	private List<Clothing> clothings;
 
 	public Player(Vector3 position, Vector3 dimensions) {
 		super(position, dimensions);
@@ -31,8 +35,13 @@ public class Player extends RigidBody {
 	}
 	
 	void begin() {
-		spritesheet = new Spritesheet("/lpc_entry/png/walkcycle/BODY_skeleton.png");
+		spritesheet = new Spritesheet("/lpc_entry/png/walkcycle/BODY_male.png");
 		createSprites();
+		clothings = new ArrayList<Clothing>();
+		clothings.add(new Clothing(ClothingType.Head));
+		clothings.add(new Clothing(ClothingType.Torso));
+		clothings.add(new Clothing(ClothingType.Legs));
+		clothings.add(new Clothing(ClothingType.Feet));
 	}
 	
 	void createSprites() {
@@ -128,12 +137,19 @@ public class Player extends RigidBody {
         }
     }
 	
+	public void changeClothing(ClothingType clothing) {
+		clothings.get(clothing.getIndex()).changeClothing();
+	}
+	
 	@Override
 	public void render(Graphics g) {
 		/*Graphics2D g2 = (Graphics2D)g;
 		g2.setColor(new Color(250, 40, 40, 100));
 		g2.fillRect(this.getCollisionX()-Game.camera.getX(), this.getCollisionY()-Game.camera.getY(), getCollisionWidth(), getCollisionHeight());*/
 		g.drawImage(sprites[direction.getDirection()][spriteIndex], getX()-Game.camera.getX(), getY()-Game.camera.getY(), getWidth(), getHeight(), null);
+		for(Clothing clothing : clothings) {
+			clothing.render(g, getX()-Game.camera.getX(), getY()-Game.camera.getY(), getWidth(), getHeight(), spriteIndex, direction.getDirection());
+		}
 
 	}
 
